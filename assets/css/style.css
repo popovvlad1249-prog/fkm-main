@@ -246,24 +246,24 @@ hr { border: 0; border-top: 1px solid var(--line); margin: 2.5rem 0; }
 /* --------------------------------------------------------------------------
    6. Шапка и навигация
    -------------------------------------------------------------------------- */
-.topbar { background: #fff; color: var(--slate); font-size: .8rem; }
+.topbar { background: var(--steel-950); color: rgba(255,255,255,.6); font-size: .8rem; }
 .topbar__inner { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; min-height: 40px; }
 .topbar__facts { display: flex; align-items: center; gap: 1.6rem; }
 .topbar__facts span { display: inline-flex; align-items: center; gap: .45rem; white-space: nowrap; }
 .topbar__facts svg { width: 14px; height: 14px; color: var(--grey-400); flex: none; }
-.topbar a { color: var(--slate); }
-.topbar a:hover { color: var(--steel-500); }
+.topbar a { color: rgba(255,255,255,.8); }
+.topbar a:hover { color: var(--steel-200); }
 .topbar__side { display: flex; align-items: center; gap: 1.3rem; }
 
 .lang { display: inline-flex; gap: .15rem; font-family: var(--font-mono); font-size: .72rem; letter-spacing: .08em; }
-.lang a { padding: .18rem .48rem; border-radius: 5px; color: var(--slate-soft); }
-.lang a.is-active { background: var(--grey-100); color: var(--ink); }
+.lang a { padding: .18rem .48rem; border-radius: 5px; color: rgba(255,255,255,.5); }
+.lang a.is-active { background: rgba(255,255,255,.12); color: #fff; }
 
 .header {
   position: sticky; top: 0; z-index: 100;
-  background: rgba(255,255,255,.93);
-  backdrop-filter: saturate(160%) blur(14px);
-  -webkit-backdrop-filter: saturate(160%) blur(14px);
+  /* Строго непрозрачный чистый белый: совпадает с белым фоном логотипа,
+     поэтому его подложка не проступает светлым прямоугольником при скролле. */
+  background: #fff;
   border-bottom: 1px solid var(--line);
   transition: box-shadow .25s var(--ease);
 }
@@ -568,8 +568,7 @@ hr { border: 0; border-top: 1px solid var(--line); margin: 2.5rem 0; }
 /* Якорная подшапка */
 .subnav {
   position: sticky; top: var(--header-h); z-index: 60;
-  background: rgba(255,255,255,.95);
-  backdrop-filter: saturate(160%) blur(12px); -webkit-backdrop-filter: saturate(160%) blur(12px);
+  background: #fff;
   border-bottom: 1px solid var(--line);
 }
 .subnav__inner { display: flex; gap: .35rem; overflow-x: auto; scrollbar-width: none; padding-block: .6rem; }
