@@ -163,10 +163,41 @@
     });
   }
 
+  /* --------------------------------------- Высота липких панелей и якоря */
+  /* Шапка и подшапка «прилипают» сверху, поэтому якорная ссылка должна
+     останавливать страницу ниже них. Высоты меряем вживую: они зависят
+     от ширины окна, размера логотипа и переносов в меню. */
+  function initStickyOffsets() {
+    var header = $('.header');
+    if (!header) return;
+    var subnav = $('.subnav');
+    var root = document.documentElement;
+
+    function sync() {
+      var headerH = Math.round(header.getBoundingClientRect().height);
+      if (!headerH) return;
+      /* Пишем в отдельную переменную, а не в --header-h: та задаёт min-height
+         самой шапки, и запись измеренной высоты обратно в неё наращивала бы
+         шапку на пиксель при каждом пересчёте. */
+      root.style.setProperty("--sticky-top", headerH + "px");
+      var subnavH = subnav ? Math.round(subnav.getBoundingClientRect().height) : 0;
+      root.style.scrollPaddingTop = (headerH + subnavH + 20) + "px";
+    }
+
+    sync();
+    window.addEventListener('resize', sync);
+    if ('ResizeObserver' in window) {
+      var ro = new ResizeObserver(sync);
+      ro.observe(header);
+      if (subnav) ro.observe(subnav);
+    }
+  }
+
   /* ------------------------------------------------- Активный пункт subnav */
   function initScrollSpy() {
     var nav = $('.subnav');
     if (!nav || !('IntersectionObserver' in window)) return;
+    var strip = $('.subnav__inner', nav);
     var links = $$('a[href^="#"]', nav);
     if (!links.length) return;
 
@@ -181,23 +212,44 @@
     });
     if (!targets.length) return;
 
+    /* Подтягиваем активный пункт в видимую часть полосы — только по
+       горизонтали и только внутри самой полосы. Прежняя реализация звала
+       scrollIntoView, а он двигает и саму страницу: при плавном переходе
+       к якорю наблюдатель срабатывал на каждой промежуточной секции и
+       запускал новую прокрутку поверх текущей, из-за чего страницу дёргало. */
+    function keepInView(link) {
+      if (!strip || strip.scrollWidth <= strip.clientWidth + 1) return;
+      var pad = 16;
+      var linkBox = link.getBoundingClientRect();
+      var stripBox = strip.getBoundingClientRect();
+      var delta = 0;
+      if (linkBox.left < stripBox.left + pad) {
+        delta = linkBox.left - stripBox.left - pad;
+      } else if (linkBox.right > stripBox.right - pad) {
+        delta = linkBox.right - stripBox.right + pad;
+      }
+      if (!delta) return;
+      var left = Math.max(0, strip.scrollLeft + delta);
+      if (strip.scrollTo) {
+        strip.scrollTo({ left: left, behavior: reduceMotion ? 'auto' : 'smooth' });
+      } else {
+        strip.scrollLeft = left;
+      }
+    }
+
     var io = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
         if (!entry.isIntersecting) return;
-        links.forEach(function (l) { l.classList.remove('is-active'); });
         var active = map[entry.target.id];
-        if (active) {
-          active.classList.add('is-active');
-          if (active.scrollIntoView) {
-            active.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: reduceMotion ? 'auto' : 'smooth' });
-          }
-        }
+        if (!active || active.classList.contains('is-active')) return;
+        links.forEach(function (l) { l.classList.remove('is-active'); });
+        active.classList.add('is-active');
+        keepInView(active);
       });
     }, { rootMargin: '-35% 0px -55% 0px', threshold: 0 });
 
     targets.forEach(function (t) { io.observe(t); });
   }
-
   /* -------------------------------------------------------------- Формы */
   function initForms() {
     $$('form[data-form]').forEach(function (form) {
@@ -271,6 +323,7 @@
     initAccordions();
     initReveal();
     initToTop();
+    initStickyOffsets();
     initScrollSpy();
     initForms();
     initMisc();

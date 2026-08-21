@@ -567,7 +567,7 @@ hr { border: 0; border-top: 1px solid var(--line); margin: 2.5rem 0; }
 
 /* Якорная подшапка */
 .subnav {
-  position: sticky; top: var(--header-h); z-index: 60;
+  position: sticky; top: var(--sticky-top, var(--header-h)); z-index: 60;
   background: #fff;
   border-bottom: 1px solid var(--line);
 }
@@ -885,3 +885,12 @@ table.data td:first-child { font-weight: 600; color: var(--ink); }
 
 /* Тонкая линия под шапкой в цвете серого логотипа */
 .header { border-bottom-color: var(--grey-200); }
+
+/* --------------------------------------------------------------------------
+   18. Якоря под липкими панелями
+   Точное значение выставляет скрипт по измеренной высоте шапки и подшапки.
+   Здесь — запасной вариант на случай отключённого JS: на страницах
+   с подшапкой якорю нужно больше отступа, иначе заголовок секции
+   останавливается под ней.
+   -------------------------------------------------------------------------- */
+html:has(.subnav) { scroll-padding-top: calc(var(--header-h) + 80px); }
