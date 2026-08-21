@@ -261,8 +261,8 @@ hr { border: 0; border-top: 1px solid var(--line); margin: 2.5rem 0; }
 
 .header {
   position: sticky; top: 0; z-index: 100;
-  /* Строго непрозрачный чистый белый: совпадает с белым фоном логотипа,
-     поэтому его подложка не проступает светлым прямоугольником при скролле. */
+  /* Сплошной белый без прозрачности: шапка не темнеет при скролле
+     и не спорит с логотипом. */
   background: #fff;
   border-bottom: 1px solid var(--line);
   transition: box-shadow .25s var(--ease);
@@ -271,7 +271,7 @@ hr { border: 0; border-top: 1px solid var(--line); margin: 2.5rem 0; }
 .header__inner { display: flex; align-items: center; gap: clamp(1rem, 2vw, 2.25rem); min-height: var(--header-h); }
 
 .logo { flex: none; display: block; }
-.logo img { height: clamp(40px, 3.8vw, 50px); width: auto; }
+.logo img { width: clamp(126px, 11.5vw, 150px); height: auto; }  /* 150 × 0,486 = 73px, укладывается в --header-h 76px */
 
 .nav { margin-left: auto; }
 .nav__list { display: flex; align-items: center; gap: clamp(.1rem, .8vw, .75rem); list-style: none; margin: 0; padding: 0; }
@@ -772,10 +772,7 @@ table.data td:first-child { font-weight: 600; color: var(--ink); }
 .footer a { color: rgba(255,255,255,.72); }
 .footer a:hover { color: var(--steel-200); }
 .footer__top { display: grid; grid-template-columns: minmax(0, 1.35fr) repeat(3, minmax(0, 1fr)); gap: clamp(1.75rem, 1rem + 2.5vw, 3.25rem); padding-block: clamp(3rem, 2rem + 3vw, 4.5rem); }
-.footer__brand img {
-  height: 46px; width: auto; margin-bottom: 1.3rem;
-  background: #fff; padding: 9px 13px; border-radius: 11px;
-}
+.footer__brand img { width: 172px; height: auto; margin-bottom: 1.3rem; }
 .footer__brand p { font-size: .9rem; line-height: 1.6; max-width: 34ch; }
 .footer h4 { color: #fff; font-size: .82rem; font-family: var(--font-mono); font-weight: 500; letter-spacing: .14em; text-transform: uppercase; margin-bottom: 1.1rem; }
 .footer ul { list-style: none; margin: 0; padding: 0; }
